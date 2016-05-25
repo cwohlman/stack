@@ -40,7 +40,6 @@ I like the idea of building a full stack that:
 - [init.js](https://github.com/picanteverde/init)
 - https://github.com/cwohlman/meteor-tool-idea
 - https://github.com/cwohlman/event-sourced-example
-- 
 
 #Goals
 

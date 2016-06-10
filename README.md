@@ -21,6 +21,7 @@ I like the idea of building a full stack that:
 
 #Ideas for Components/paradigms to use
 
+- feathers.js
 - mithril.js
 - webpack
 - es6 modules?

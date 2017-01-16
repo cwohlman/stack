@@ -18,6 +18,7 @@ I like the idea of building a full stack that:
 - Works together really well as a whole
 - Is easily modified to build cli tools and desktop apps (electron)
 - Provides a single paradigm/pattern and easy to use tooling around packages/modules/imports
+- Updated and extended by pulling code from repositories (maybe using a git-based custom merge tool)
 
 #Ideas for Components/paradigms to use
 
@@ -26,10 +27,17 @@ I like the idea of building a full stack that:
 - webpack
 - es6 modules?
 - rethinkdb
+- postgresql (if using graphql the schema is static for a given build, so any kind of package that can generate and migrate the db from a given schema would work)
 - graphql? if so, apollo
 - websockets
 - redux?
+- flow
+- gulp
+- babel
+- auth0
+- squirrel keys
 - contracts https://gist.github.com/cwohlman/068de55489ebc23f74fe
+- graphql to sql https://github.com/stems/join-monster
 - event sourcing?
    I think the default data model should use event sourcing, and/or a state model similar to redux, 
    but actually persisting the events can be optional if there's a performance penalty to worry about.
@@ -38,6 +46,8 @@ I like the idea of building a full stack that:
 
 - Meteor, the best full stack javascript development solution yet
 - Horizon js, a really cool platform for building web apps on rethinkdb
+- graphcool
+- [nextjs](https://zeit.co/blog/next)
 - [init.js](https://github.com/picanteverde/init)
 - https://github.com/cwohlman/meteor-tool-idea
 - https://github.com/cwohlman/event-sourced-example

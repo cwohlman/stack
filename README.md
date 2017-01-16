@@ -36,6 +36,7 @@ I like the idea of building a full stack that:
 - babel
 - auth0
 - squirrel keys
+- Docker
 - contracts https://gist.github.com/cwohlman/068de55489ebc23f74fe
 - graphql to sql https://github.com/stems/join-monster
 - event sourcing?
@@ -49,6 +50,7 @@ I like the idea of building a full stack that:
 - graphcool
 - [nextjs](https://zeit.co/blog/next)
 - [init.js](https://github.com/picanteverde/init)
+- https://zeit.co/now
 - https://github.com/cwohlman/meteor-tool-idea
 - https://github.com/cwohlman/event-sourced-example
 

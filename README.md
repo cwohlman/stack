@@ -71,3 +71,20 @@ I like the idea of building a full stack that:
 - Light weight
 - Composable stack
 - Testable, testing built in
+
+# Current Plan:
+
+1. Run nginx and mongo in docker, share the nginx container (update the config) across multiple development projects, using a dynamically allocated port number and local dns. (For now remind the user to manually update their hosts file)
+2. Run the tool using nodemon, build the app using one (or more) gulp tasks (I hope that gulp supports multiple, parallel watch tasks).
+3. Use webpack to bundle client side
+4. Use babel to transform (at a minimum) import-export syntax into the right syntax.
+5. Use glamor to provide css, react to provide html, yarn for javascript package management
+6. Folder Structure:
+
+- tool - tool which runs the development server (javascript, but not configuration files, for now will include gulpfile.js, later gulpfile.js will be auto-generated?)
+- src/server.js - entrypoint for the server
+- src/client.js - entrypoint for the client
+- server - node js app which is the server (generated)
+- client - files which will be served to the client (generated), not all files will be served to the client, only those specified in client/program.json
+- static - (maybe client/static?) pre-generated files for the client, e.g. a pregenerated index.html
+- config - files which control the execution of the tool (but are not source files for the tool)

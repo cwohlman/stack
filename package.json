@@ -1,0 +1,33 @@
+{
+  "name": "stack",
+  "version": "0.0.1",
+  "description": "My idea of the perfect web stack",
+  "main": "./tool",
+  "repository": {
+    "url": "git@github.com:cwohlman/stack.git",
+    "type": "git"
+  },
+  "scripts": {
+    "dev": "nodemon --watch gulpfile.js --quiet --exec gulp"
+  },
+  "author": "Joshua Ohlman <codewriterohs@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-runtime": "^6.20.0",
+    "gulp": "^3.9.1",
+    "webpack": "^1.14.0",
+    "webpack-stream": "^3.2.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  }
+}

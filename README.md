@@ -33,6 +33,7 @@ I like the idea of building a full stack that:
 - redux?
 - flow
 - gulp
+- glamor
 - babel
 - auth0
 - squirrel keys
@@ -40,7 +41,7 @@ I like the idea of building a full stack that:
 - contracts https://gist.github.com/cwohlman/068de55489ebc23f74fe
 - graphql to sql https://github.com/stems/join-monster
 - event sourcing?
-   I think the default data model should use event sourcing, and/or a state model similar to redux, 
+   I think the default data model should use event sourcing, and/or a state model similar to redux,
    but actually persisting the events can be optional if there's a performance penalty to worry about.
 
 #Inspiration

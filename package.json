@@ -10,7 +10,8 @@
     "start": "node tool/start-dev-server.js",
     "dev": "node tool/start-dev-server.js",
     "prod": "node tool/build-prod.js && node index.js",
-    "build": "node tool/build-prod.js"
+    "build": "node tool/build-prod.js",
+    "add": "node -e 'require(\"./tool/add-component\")(...process.argv.slice(1))' \"$@\""
   },
   "dependencies": {
     "express": "^4.17.1",

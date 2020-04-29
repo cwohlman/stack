@@ -21,8 +21,8 @@ TODO:
 
 ## Adding features
 
-To add a new client route `yarn run add NewFeature view '/some-url'`
-To add a new client view component `yarn run add NewFeature view`
-To add a new server endpoint `yarn run add NewFeature endpoint '/api/some-url'`
-To add a new shared component `yarn run add NewFeature function` or `yarn run add NewFeature class`
-To add a new database collection `yarn run add NewFeature data 'collection-name'`
+To add a new client route `yarn run add view NewFeature '' '/some-url'`
+To add a new client view component `yarn run add view NewFeature '' `
+To add a new server endpoint `yarn run add endpoint NewFeature '' '/api/some-url'`
+To add a new shared component `yarn run add function NewFeature` or `yarn run add NewFeature class`
+To add a new database collection `yarn run add data NewFeature '' 'collection-name'`

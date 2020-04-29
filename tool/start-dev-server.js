@@ -1,6 +1,4 @@
-const { requestHandler } = require("./requestHandler");
-const http = require('http')
-
+const http = require('http');
 const Bundler = require('parcel-bundler');
 
 async function start() {
@@ -15,8 +13,7 @@ async function start() {
   serverBundler.on('bundled', function (bundle) {
     try {
       delete require.cache[bundle.name];
-      const app = requestHandler(require(bundle.name).default, clientBundler.middleware());
-      listener = app;
+      listener = require(bundle.name).default(clientBundler.middleware());
     } catch (error) {
       console.error('Error starting app', error);
       listener = (req, res) => res.end(error.stack);
@@ -26,8 +23,8 @@ async function start() {
   http.createServer((req, res) => {
     return listener(req, res);
   }).listen(3000);
+
+  console.log('Dev server listening on port 3000');
 }
 
 start().catch(error => console.error('error', error.stack));
-
-

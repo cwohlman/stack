@@ -1,11 +1,10 @@
-const { requestHandler } = require('./tool/requestHandler');
+const http = require('http');
+const express = require('express');
 const serverHandler = require('./.build/server').default;
-const clientHandler = require('express').static('.build/client');
+const clientHandler = express.static('.build/client');
 
-// Important you have to run ./build first
+const app = serverHandler(clientHandler);
 
-const app = requestHandler(serverHandler(), clientHandler);
+http.createServer(app).listen(3000);
 
-app.on('error', (error) => console.error(error.stack))
-
-app.listen(3000);
+console.log('Production server listening on port 3000');

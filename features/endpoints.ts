@@ -1,1 +1,1 @@
-export { default as HomePage } from "./HomePage/HomePageEndpoint";
+export { default as ProfileEndpoint } from './HomePage/ProfileEndpoint';

@@ -28,12 +28,6 @@ module.exports = function addComponent(
   }
   assignRoute(componentType, name, longName, route);
   assignRoute(componentType, name, longName, getDefaultRoute(componentType, featureName, componentName));
-  // TODO replace every usage of controller with endpoint
-  // mkdir -p featureName
-  // write featureName / featureName + componentType + .ts(x)?
-  // append `export { default as featureName } from  featureName / featureName + componentType + .ts(x)? to (features/views | controllers | data)
-  // update the route table if a route is specified
-  // Note: route is required for server database collections (route is used as the collection name when connecting to a real db), we may support client only collections?
 }
 
 function getTemplate(componentName, componentType) {
@@ -46,13 +40,32 @@ export default function ${componentName}({ ports }: { ports: ClientPorts }) {
 };
 `);
   }
-  throw new Error('NI')
+  if (componentType === 'endpoint') {
+    return `import { ServerPort } from "../../infrastructure/serverPort";
+
+export default class ${componentName} implements ServerPort<any, any> {
+  async execute(params: any) {
+    throw new Error('Not implemented')
+  }
+}
+`
+  }
+  if (componentType === 'collection') {
+    throw new Error('NI')
+  }
+  return `export default class ${componentName} {}`
 }
 function exportComponent(type, name, path) {
   let exportFile;
   const exportLine = `export { default as ${name} } from '${path}'`
   if (type === 'view') {
     exportFile = 'features/views.ts'
+  }
+  if (type === 'endpoint') {
+    exportFile = 'features/endpoints.ts'
+  }
+  if (type === 'collection') {
+    exportFile = 'features/collections.ts'
   }
   fs.writeFileSync(
     exportFile,
@@ -62,7 +75,11 @@ function exportComponent(type, name, path) {
 function getDefaultRoute(componentType, featureName, componentName) {
   if (componentType === 'view') {
     const componentPath = featureName === componentName ? featureName : `${featureName}/${componentName}`
-    return `Views/${componentPath}`;
+    return `views/${componentPath}`;
+  }
+  if (componentType === 'endpoint') {
+    const componentPath = featureName === componentName ? featureName : `${featureName}/${componentName}`
+    return `api/${componentPath}`;
   }
 }
 function assignRoute(type, name, longName, route) {
@@ -72,39 +89,55 @@ function assignRoute(type, name, longName, route) {
   if (type === 'view') {
     const importLine = `import { ${name} as ${longName} } from '../features/views'`;
     let result = fs.readFileSync('client/routes.ts', 'utf-8');
-    if (result.indexOf(importLine) === -1) {
-      const indexOfLastImport = getLastIndexOf(result, /^.+import.+$/)
-      let front = result.slice(0, indexOfLastImport);
-      let back = result.slice(indexOfLastImport);
-
-      if (front.length && front[front.length - 1] !== '\n') {
-        front += '\n'
-      }
-
-      result = front + importLine + '\n' + back;
-    }
-    const exportLine = `  [${JSON.stringify(route)}]: ${longName},`;
-    if (result.indexOf(exportLine) === -1) {
-      const indexOfLastExport = getLastIndexOf(result, /.+\[.+\].+/);
-      if (indexOfLastExport === 0) {
-        result = result + `\nconst routes = {\n${exportLine}\n};\nexport default routes;\n`;
-      } else {
-        let front = result.slice(0, indexOfLastExport);
-        let back = result.slice(indexOfLastExport);
-
-        if (front[front.length - 1] !== '\n') {
-          front += '\n'
-        }
-        if (back[0] !== '\n') {
-          back = '\n' + back;
-        }
-
-        result = front + exportLine + back;
-      }
-    }
+    result = addComponentToRoutes(result, importLine, route, longName);
     fs.writeFileSync('client/routes.ts', result);
   }
+  if (type === 'endpoint') {
+    const importLine = `import { ${name} as ${longName} } from '../features/endpoints'`;
+    let result = fs.readFileSync('server/routes.ts', 'utf-8');
+    result = addComponentToRoutes(result, importLine, route, longName);
+    fs.writeFileSync('server/routes.ts', result);
+  }
+  if (type === 'collection') {
+    const importLine = `import { ${name} as ${longName} } from '../features/collections'`;
+    let result = fs.readFileSync('server/collections.ts', 'utf-8');
+    result = addComponentToRoutes(result, importLine, route, longName);
+    fs.writeFileSync('server/collections.ts', result);
+  }
+
+  // Other components don't use routes
 }
+function addComponentToRoutes(result, importLine, route, longName) {
+  if (result.indexOf(importLine) === -1) {
+    const indexOfLastImport = getLastIndexOf(result, /^.+import.+$/);
+    let front = result.slice(0, indexOfLastImport);
+    let back = result.slice(indexOfLastImport);
+    if (front.length && front[front.length - 1] !== '\n') {
+      front += '\n';
+    }
+    result = front + importLine + '\n' + back;
+  }
+  const exportLine = `  [${JSON.stringify(route)}]: ${longName},`;
+  if (result.indexOf(exportLine) === -1) {
+    const indexOfLastExport = getLastIndexOf(result, /.+\[.+\].+/);
+    if (indexOfLastExport === 0) {
+      result = result + `\nconst routes = {\n${exportLine}\n};\nexport default routes;\n`;
+    }
+    else {
+      let front = result.slice(0, indexOfLastExport);
+      let back = result.slice(indexOfLastExport);
+      if (front[front.length - 1] !== '\n') {
+        front += '\n';
+      }
+      if (back[0] !== '\n') {
+        back = '\n' + back;
+      }
+      result = front + exportLine + back;
+    }
+  }
+  return result;
+}
+
 function getLastIndexOf(text, regex) {
   let remaining = text;
   let index = 0;
@@ -116,14 +149,11 @@ function getLastIndexOf(text, regex) {
   return index;
 }
 function getSuffix(componentType) {
-  if (componentType === 'view') {
-    return 'View';
-  }
-  throw new Error('NI')
+  return componentType[0].toUpperCase() + componentType.slice(1);
 }
 function getExtension(componentType) {
   if (componentType === 'view') {
     return 'tsx';
   }
-  throw new Error('NI')
+  return 'ts';
 }

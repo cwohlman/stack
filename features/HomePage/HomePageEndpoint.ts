@@ -1,6 +1,6 @@
 import { ServerPort } from "../../interfaces/serverPort";
 
-export default class HomePageController implements ServerPort<string, string> {
+export default class HomePageEndpoint implements ServerPort<string, string> {
   async execute(echo: string) {
     return echo;
   }

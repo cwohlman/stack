@@ -3,23 +3,31 @@ const fs = require('fs');
 module.exports = function addComponent(
   componentType,
   featureName,
-  componentName = featureName,
+  componentName,
   route = null
 ) {
-  const name = `${componentName || featureName}${getSuffix(componentType)}`;
+  if (! componentName) {
+    componentName = featureName;
+  }
+  const shortName = componentName;
+  const suffix = getSuffix(componentType);
+  const name = `${shortName}${suffix}`;
+  const longName = (componentName === featureName ? featureName : (featureName + componentName)) + suffix;
   const template = getTemplate(name, componentType);
   const dir = `features/${featureName}`;
   const path = `${dir}/${name}.${getExtension(componentType)}`;
 
+
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
+  if (!fs.existsSync(path)) {
+    fs.writeFileSync(path, template);
 
-  fs.writeFileSync(path, template);
-
-  exportComponent(componentType, name, path.replace('features', '.').replace(/\.[^.]+$/, ''));
-
-  assignRoute(componentType, name, route);
+    exportComponent(componentType, name, path.replace('features', '.').replace(/\.[^.]+$/, ''));
+  }
+  assignRoute(componentType, name, longName, route);
+  assignRoute(componentType, name, longName, getDefaultRoute(componentType, featureName, componentName));
   // TODO replace every usage of controller with endpoint
   // mkdir -p featureName
   // write featureName / featureName + componentType + .ts(x)?
@@ -51,8 +59,61 @@ function exportComponent(type, name, path) {
     fs.readFileSync(exportFile, 'utf-8') + exportLine + ';\n'
   );
 }
-function assignRoute(type, name) {
-  // TODO
+function getDefaultRoute(componentType, featureName, componentName) {
+  if (componentType === 'view') {
+    const componentPath = featureName === componentName ? featureName : `${featureName}/${componentName}`
+    return `Views/${componentPath}`;
+  }
+}
+function assignRoute(type, name, longName, route) {
+  if (!route) {
+    return;
+  }
+  if (type === 'view') {
+    const importLine = `import { ${name} as ${longName} } from '../features/views'`;
+    let result = fs.readFileSync('client/routes.ts', 'utf-8');
+    if (result.indexOf(importLine) === -1) {
+      const indexOfLastImport = getLastIndexOf(result, /^.+import.+$/)
+      let front = result.slice(0, indexOfLastImport);
+      let back = result.slice(indexOfLastImport);
+
+      if (front.length && front[front.length - 1] !== '\n') {
+        front += '\n'
+      }
+
+      result = front + importLine + '\n' + back;
+    }
+    const exportLine = `  [${JSON.stringify(route)}]: ${longName},`;
+    if (result.indexOf(exportLine) === -1) {
+      const indexOfLastExport = getLastIndexOf(result, /.+\[.+\].+/);
+      if (indexOfLastExport === 0) {
+        result = result + `\nconst routes = {\n${exportLine}\n};\nexport default routes;\n`;
+      } else {
+        let front = result.slice(0, indexOfLastExport);
+        let back = result.slice(indexOfLastExport);
+
+        if (front[front.length - 1] !== '\n') {
+          front += '\n'
+        }
+        if (back[0] !== '\n') {
+          back = '\n' + back;
+        }
+
+        result = front + exportLine + back;
+      }
+    }
+    fs.writeFileSync('client/routes.ts', result);
+  }
+}
+function getLastIndexOf(text, regex) {
+  let remaining = text;
+  let index = 0;
+  let match;
+  while (match = remaining.match(regex)) {
+    index += match.index + match[0].length;
+    remaining = text.slice(index);
+  }
+  return index;
 }
 function getSuffix(componentType) {
   if (componentType === 'view') {

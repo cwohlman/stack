@@ -1,1 +1,7 @@
-// TODO: export every client view at route /views/${name}
+import { HomePageView as HomePageView } from '../features/views'
+
+const routes = {
+  ["/"]: HomePageView,
+  ["view/HomePage"]: HomePageView,
+};
+export default routes;

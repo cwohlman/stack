@@ -4,7 +4,6 @@ This originally was an idea for a bundler (you can see the readme at this commit
 
 TODO:
 
-- Use npm scripts for start, dev, build, etc.
 - Finish with todos in source code
 - Add testing
 - Create the minimal front end react app

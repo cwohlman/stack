@@ -6,6 +6,12 @@
   "repository": "git@github.com:cwohlman/stack.git",
   "author": "Joshua Ohlman <codewriterohs@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "node tool/start-dev-server.js",
+    "dev": "node tool/start-dev-server.js",
+    "prod": "node tool/build-prod.js && node index.js",
+    "build": "node tool/build-prod.js"
+  },
   "dependencies": {
     "express": "^4.17.1",
     "parcel-bundler": "^1.12.4",

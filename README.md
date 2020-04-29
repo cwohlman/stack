@@ -5,7 +5,24 @@ This originally was an idea for a bundler (you can see the readme at this commit
 TODO:
 
 - Finish with todos in source code
+- Add a mock app with memory backed collections, client code, and server code all in the same process (should be importable both in the browser & node)
 - Add testing
 - Create the minimal front end react app
 - Create a server side router and routes
 - More advanced stuff like server side rendering & progressive web apps, etc.
+
+---
+
+# Documentation for features that may not exist yet
+
+## Getting started
+
+`yarn && yarn start`
+
+## Adding features
+
+To add a new client route `yarn run add NewFeature view '/some-url'`
+To add a new client view component `yarn run add NewFeature view`
+To add a new server endpoint `yarn run add NewFeature endpoint '/api/some-url'`
+To add a new shared component `yarn run add NewFeature function` or `yarn run add NewFeature class`
+To add a new database collection `yarn run add NewFeature data 'collection-name'`

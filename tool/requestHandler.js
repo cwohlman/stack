@@ -2,8 +2,8 @@ const express = require('express');
 
 function requestHandler(serverRoutes, clientRoutes) {
   const app = express();
-  app.use(serverRoutes);
   app.use(clientRoutes);
+  app.use('/api', serverRoutes);
   return app;
 }
 

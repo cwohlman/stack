@@ -1,0 +1,3 @@
+#!/bin/bash
+
+node ./tool/build-prod.js

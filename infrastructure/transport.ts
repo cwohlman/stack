@@ -13,11 +13,12 @@ export default class Transport {
     if (typeof item !== 'object' || item == null) {
       return item;
     }
-    
-    const typeId = this.typeIdKey in item ? item[this.typeIdKey] : null;
+
+    const { [this.typeIdKey]: typeId, ...details } = item;
     const itemId = this.itemIdKey in item ? item[this.itemIdKey] : null;
+
     if (typeId && itemId && this.transportableTypes[typeId]) {
-      return new (this.transportableTypes[typeId])(itemId, item);
+      return new (this.transportableTypes[typeId])(itemId, details);
     }
     return item;
   }
@@ -29,10 +30,12 @@ export default class Transport {
 
     const expectedType = 'constructor' in item ? item.constructor : null;
     const itemId = '_id' in item ? item._id : null;
+
     if (expectedType && itemId) {
       const typeId = this.findTypeId(expectedType);
-      return { [this.itemIdKey]: typeId, _id: itemId, ...item }
+      return { [this.typeIdKey]: typeId, _id: itemId, ...item }
     }
+
     return item;
   }
 

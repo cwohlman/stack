@@ -56,9 +56,9 @@ export function initializeEndpoints(databasePorts: DatabasePorts) {
 
   for (const endpointName in endpointsTypes) {
     if (endpointsTypes.hasOwnProperty(endpointName)) {
-      const CollectionClass = endpointsTypes[endpointName];
+      const EndpointClass = endpointsTypes[endpointName];
 
-      result[endpointName] = new CollectionClass(databasePorts);
+      result[endpointName] = new EndpointClass(databasePorts);
     }
   }
 

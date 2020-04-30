@@ -96,11 +96,11 @@ function exportComponent(type, name, path) {
 function getDefaultRoute(componentType, featureName, componentName) {
   if (componentType === 'view') {
     const componentPath = featureName === componentName ? featureName : `${featureName}/${componentName}`
-    return `views/${componentPath}`;
+    return `views/${componentPath}`.toLowerCase();
   }
   if (componentType === 'endpoint') {
     const componentPath = featureName === componentName ? featureName : `${featureName}/${componentName}`
-    return `api/${componentPath}`;
+    return `api/${componentPath}`.toLowerCase();
   }
   if (componentType === 'collection') {
     const collectionName = featureName === componentName ? featureName : `${featureName}${componentName}`

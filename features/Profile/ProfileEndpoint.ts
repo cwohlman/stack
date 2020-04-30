@@ -1,11 +1,11 @@
 import { ServerPort } from "../../infrastructure/serverPort";
 import { DatabasePorts } from "../databasePorts";
 
-export default class ProfileEndpoint implements ServerPort<{}, { name: string }> {
+export default class ProfileEndpoint implements ServerPort<any, any> {
   constructor(
     private ports: DatabasePorts
   ) {}
-  async execute() {
-    return { name: 'Joshua' }
+  async execute(params: any) {
+    throw new Error('Not implemented')
   }
 }

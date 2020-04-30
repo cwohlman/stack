@@ -1,1 +1,1 @@
-export { default as ProfileEndpoint } from './HomePage/ProfileEndpoint';
+export { default as ProfileEndpoint } from './Profile/ProfileEndpoint';

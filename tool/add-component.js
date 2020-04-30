@@ -6,7 +6,7 @@ module.exports = function addComponent(
   componentName,
   route = null
 ) {
-  if (! componentName) {
+  if (!componentName) {
     componentName = featureName;
   }
   const shortName = componentName;
@@ -16,6 +16,7 @@ module.exports = function addComponent(
   const template = getTemplate(name, shortName, componentType);
   const dir = `features/${featureName}`;
   const path = `${dir}/${name}.${getExtension(componentType)}`;
+  const importPath = path.replace('features', '.').replace(/\.[^.]+$/, '');
 
 
   if (!fs.existsSync(dir)) {
@@ -24,7 +25,8 @@ module.exports = function addComponent(
   if (!fs.existsSync(path)) {
     fs.writeFileSync(path, template);
 
-    exportComponent(componentType, name, path.replace('features', '.').replace(/\.[^.]+$/, ''));
+    exportComponent(componentType, name, importPath);
+    exportTransportType(componentType, shortName, importPath);
   }
   assignRoute(componentType, name, longName, route);
   assignRoute(componentType, name, longName, getDefaultRoute(componentType, featureName, componentName));
@@ -161,6 +163,19 @@ function addComponentToRoutes(result, importLine, route, longName) {
     }
   }
   return result;
+}
+function exportTransportType(type, shortName, importPath) {
+  let exportFile;
+  const exportLine = `export { ${shortName} } from '${importPath}'`
+  if (type === 'collection') {
+    exportFile = 'features/transportTypes.ts'
+  }
+  if (exportFile) {
+    fs.writeFileSync(
+      exportFile,
+      fs.readFileSync(exportFile, 'utf-8') + exportLine + ';\n'
+    );
+  }
 }
 
 function getLastIndexOf(text, regex) {

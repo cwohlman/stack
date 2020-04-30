@@ -1,6 +1,6 @@
 import { ProfileEndpoint as ProfileEndpoint } from '../features/endpoints'
 
 const routes = {
-  ["api/profile"]: ProfileEndpoint,
+  ["/api/profile"]: ProfileEndpoint,
 };
 export default routes;

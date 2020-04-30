@@ -6,6 +6,6 @@ export default class ProfileEndpoint implements ServerPort<any, any> {
     private ports: DatabasePorts
   ) {}
   async execute(params: any) {
-    throw new Error('Not implemented')
+    return "Done";
   }
 }

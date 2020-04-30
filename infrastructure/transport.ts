@@ -1,15 +1,19 @@
-type TransportableType = {
-  new <T>(id: string, props: any): T;
+type TransportableType<T> = {
+  new (_id: string, props: any): T;
 };
 
 export default class Transport {
   constructor(
-    private transportableTypes: { [typeId: string]: TransportableType }
+    private transportableTypes: { [typeId: string]: TransportableType<any> }
   ) { }
   private readonly typeIdKey = '~t';
   private readonly itemIdKey = '_id';
 
   parse(item: any) {
+    if (typeof item !== 'object' || item == null) {
+      return item;
+    }
+    
     const typeId = this.typeIdKey in item ? item[this.typeIdKey] : null;
     const itemId = this.itemIdKey in item ? item[this.itemIdKey] : null;
     if (typeId && itemId && this.transportableTypes[typeId]) {
@@ -19,6 +23,10 @@ export default class Transport {
   }
 
   serialize(item: any) {
+    if (typeof item !== 'object' || item == null) {
+      return item;
+    }
+
     const expectedType = 'constructor' in item ? item.constructor : null;
     const itemId = '_id' in item ? item._id : null;
     if (expectedType && itemId) {

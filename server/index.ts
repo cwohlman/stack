@@ -1,18 +1,22 @@
 import express from 'express'
+import bodyParser from 'body-parser';
 import { DatabasePorts } from '../features/databasePorts';
 import * as collectionsTypes from '../features/collections';
 import * as endpointsTypes from '../features/endpoints';
+import * as transportTypes from '../features/transportTypes';
 import FakeStore from '../infrastructure/fakeStore';
 import { ServerPorts } from '../features/ports';
 import routes from './routes';
+import createHandler from './handler';
+import Transport from '../infrastructure/transport';
 
 
 export default function start(client) {
   const app = express();
   const collections: DatabasePorts = initializeCollections();
   const endpoints: ServerPorts = initializeEndpoints(collections);
-  const handlers = [];
-  const middlware = (req, res, done) => { done() }
+  const transport = new Transport(transportTypes);
+  const middlware = bodyParser.json();
   for (const route in routes) {
     if (routes.hasOwnProperty(route)) {
       const RouteHandlerClass = routes[route];
@@ -21,20 +25,11 @@ export default function start(client) {
         const endpoint = endpoints[endpointName];
 
         if (endpoint.constructor === RouteHandlerClass) {
-          app.use(route, middlware, (req, res) => {
-            try {
-              endpoint.execute(req.body)
-              .then(response => res.end(JSON.stringify(response)))
-              .catch(e => res.end(e.stack))
-            } catch (e) {
-              res.end(e.stack);
-            }
-          })
+          app.use(route, middlware, createHandler(endpoint, transport))
         }
       }
     }
   }
-
 
   app.use(client);
 

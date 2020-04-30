@@ -42,8 +42,12 @@ export default function ${componentName}({ ports }: { ports: ClientPorts }) {
   }
   if (componentType === 'endpoint') {
     return `import { ServerPort } from "../../infrastructure/serverPort";
+import { DatabasePorts } from "../databasePorts";
 
 export default class ${componentName} implements ServerPort<any, any> {
+  constructor(
+    private ports: DatabasePorts
+  ) {}
   async execute(params: any) {
     throw new Error('Not implemented')
   }

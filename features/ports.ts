@@ -2,6 +2,7 @@ import ClientPort from "../infrastructure/clientPort";
 import * as Controllers from "./endpoints";
 
 export type PortConstructors = typeof Controllers;
+
 export type PortForConstructor<T> = T extends { new (...args: any): infer P }
   ? P
   : never;

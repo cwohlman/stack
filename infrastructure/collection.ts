@@ -3,7 +3,6 @@ export interface IStore {
   get(id: string): Promise<ISaveableRecord | null>;
   replace(document: ISaveableRecord): Promise<void>;
   insert(document: ISaveableRecord | Omit<ISaveableRecord, "_id">): Promise<string>;
-
 }
 export abstract class Collection<TDocument extends { _id: string }> {
   constructor(

@@ -1,7 +1,9 @@
 import express from 'express'
+import { DatabasePorts } from '../features/databasePorts';
 
 export default function start(client) {
   const app = express();
+  // const collections: DatabasePorts = 
 
   /* TODO: 
       - Iterate over databases & constuct each

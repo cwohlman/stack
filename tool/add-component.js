@@ -13,7 +13,7 @@ module.exports = function addComponent(
   const suffix = getSuffix(componentType);
   const name = `${shortName}${suffix}`;
   const longName = (componentName === featureName ? featureName : (featureName + componentName)) + suffix;
-  const template = getTemplate(name, componentType);
+  const template = getTemplate(name, shortName, componentType);
   const dir = `features/${featureName}`;
   const path = `${dir}/${name}.${getExtension(componentType)}`;
 
@@ -30,7 +30,7 @@ module.exports = function addComponent(
   assignRoute(componentType, name, longName, getDefaultRoute(componentType, featureName, componentName));
 }
 
-function getTemplate(componentName, componentType) {
+function getTemplate(componentName, shortName, componentType) {
   if (componentType === 'view') {
     return (`import React from "react";
 import { ClientPorts } from "../ports";
@@ -51,7 +51,24 @@ export default class ${componentName} implements ServerPort<any, any> {
 `
   }
   if (componentType === 'collection') {
-    throw new Error('NI')
+    return `import { Collection, ISaveableRecord } from "../../infrastructure/collection";
+export class ${shortName} {
+  constructor(
+    public _id: string,
+    fields: any
+  ) {
+    Object.assign(this, fields);
+  }
+}
+export default class ${componentName} extends Collection<${shortName}> {
+  createEmpty(id: string) {
+    return new ${shortName}(id, {});
+  }
+  parseFromRecord(record: ISaveableRecord) {
+    return new ${shortName}(record._id, record);
+  }
+}
+`
   }
   return `export default class ${componentName} {}`
 }

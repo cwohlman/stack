@@ -10,6 +10,9 @@ export default function createHandler(endpoint: ServerPort<any, any>, transport:
     res.end(responseBody);
   }
   return (req, res) => {
-    handle(req, res).catch(e => res.end(e.stack));
+    handle(req, res).catch(e => {
+      console.error(e);
+      res.end(e.stack)
+    });
   }
 }

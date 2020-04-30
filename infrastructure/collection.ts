@@ -16,11 +16,12 @@ export abstract class Collection<TDocument extends { _id: string }> {
   }
   async get(id: string) {
     const record = await this.store.get(id);
-    const document = this.parseFromRecord(record);
 
-    // TODO: handle broken records;
+    if (! record) {
+      return null;
+    }
 
-    return document;
+    return this.parseFromRecord(record);
   }
   async replace(document: TDocument) {
     const record = this.serializeToRecord(document);

@@ -98,6 +98,10 @@ function getDefaultRoute(componentType, featureName, componentName) {
     const componentPath = featureName === componentName ? featureName : `${featureName}/${componentName}`
     return `api/${componentPath}`;
   }
+  if (componentType === 'collection') {
+    const collectionName = featureName === componentName ? featureName : `${featureName}${componentName}`
+    return collectionName.toLowerCase();
+  }
 }
 function assignRoute(type, name, longName, route) {
   if (!route) {
